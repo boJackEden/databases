@@ -9,20 +9,22 @@ module.exports = {
     get: function (req, res) {
       db.readMessages(function(messages) {
         var mappedMessages = messages.map(function(message){
-          return {username: message.user_name,
+          return {objectId: message.id,
+                  username: message.user_name,
                   roomname: message.room_name,
                   text: message.text
                 };
         });
         console.log('MESSAGES===',mappedMessages);
         res.writeHead(201);
-        res.end(JSON.stringify(mappedMessages));
+        res.end(JSON.stringify({results: mappedMessages}));
 
       });
 
     }, // a function which handles a get request for all messages
     post: function (req, res) {
-      db.writeMessage({user_name: req.body.username, room_name: req.body.roomname, text: req.body.message});
+      db.writeMessage({user_name: req.body.username, room_name: req.body.roomname, text: req.body.text});
+      console.log("This is what we're getting from the client", req.body);
       res.writeHead(201);
       res.end();
     } // a function which handles posting a message to the database

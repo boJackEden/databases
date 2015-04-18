@@ -63,13 +63,16 @@ $(function() {
         data: { order: '-createdAt'},
         success: function(data) {
           console.log('chatterbox: Messages fetched');
-
+          data = JSON.parse(data);
+          console.dir(data);
           // Don't bother if we have nothing to work with
           if (!data.results || !data.results.length) { return; }
 
           // Get the last message
           var mostRecentMessage = data.results[data.results.length-1];
+          console.log('message', mostRecentMessage);
           var displayedRoom = $('.chat span').first().data('roomname');
+          console.log('room',displayedRoom);
           app.stopSpinner();
           // Only bother updating the DOM if we have a new message
           if (mostRecentMessage.objectId !== app.lastMessageId || app.roomname !== displayedRoom) {
@@ -210,11 +213,11 @@ $(function() {
     },
     handleSubmit: function(evt) {
       var message = {
-        username: app.username,
+        username: app.username || "eden",
         text: app.$message.val(),
         roomname: app.roomname || 'lobby'
       };
-
+      console.log("sending message", message);
       app.send(message);
 
       // Stop the form from submitting
